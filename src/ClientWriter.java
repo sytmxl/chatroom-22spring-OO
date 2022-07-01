@@ -20,38 +20,23 @@ public class ClientWriter extends Thread {
         try {
             while (true) {
                 info = bufferedReader.readLine();
-                if (info.equals("/all")) {
-                    System.out.printf("共%d个客户端\n", Server.sockets.size());
-                    for (Integer integer : Server.sockets.keySet()) {
-                        System.out.println(integer);
-                    }
-                }
-                else if (info.equals("/me")) {
+                if (info.equals("/me")) {
                     System.out.println(port);
                 }
-                else if (info.startsWith("/to")) {
-                    int port = Integer.parseInt(info.split(" ")[1]);
-                    if (Server.sockets.keySet().contains(port)) {
-                        Socket socket = Server.sockets.get(port);
-                        dataOutputStream = new DataOutputStream(socket.getOutputStream());
-                        //dataOutputStream.writeUTF(port + ":" + info);
-                        System.out.println("连接到"+port);
-                    }
-                    else {
-                        System.out.println("用户不存在");
-                    }
-                }
-                else {
-                    dataOutputStream.writeUTF(port + ":" + info);
-                }
-                if (info.equals("/quit")) {
-                    dataOutputStream.writeUTF(port + ":" + info);
+                else if (info.equals("/quit")) {
                     System.out.println("您已下线");
                     System.exit(0);
+                }
+                else {
+                    send(info);
                 }
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    void send(String info) throws IOException {
+        dataOutputStream.writeUTF(info);
     }
 }

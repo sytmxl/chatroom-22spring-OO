@@ -21,10 +21,17 @@ public class ClientReader extends Thread {
                 if (infos.length == 1) {//输入为空
                     continue;
                 }
-                System.out.println(info);
-                if (infos[1].equals("/quit")) {
+
+                if (infos[0].equals("0")) {
+                    System.out.println(infos[1]);
+                }
+                else if (infos[1].equals("/quit")) {
                     System.out.println(infos[0]+"已下线");
                 }
+                else {
+                    System.out.println(info);
+                }
+
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

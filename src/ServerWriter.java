@@ -4,14 +4,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 
-public class MyWriter extends Thread {
-    private DataOutputStream dataOutputStream;
-    int port;
-    public MyWriter(DataOutputStream dataOutputStream, int port) {
-        this.dataOutputStream = dataOutputStream;
-        this.port = port;
-    }
-
+public class ServerWriter extends Thread {
     @Override
     public void run() {
         InputStreamReader inputStreamReader = new InputStreamReader(System.in);
@@ -20,32 +13,38 @@ public class MyWriter extends Thread {
         try {
             while (true) {
                 info = bufferedReader.readLine();
+                int port;
                 if (info.equals("/all")) {
                     System.out.printf("共%d个客户端\n", Server.sockets.size());
                     for (Integer integer : Server.sockets.keySet()) {
                         System.out.println(integer);
                     }
+                } else if (info.equals("/me")) {
+                    System.out.println(Server.serverport);
                 }
-                else if (info.equals("/me")) {
-                    System.out.println(port);
+                else if (info.startsWith("/toall")) {
+                    info = info.split(" ")[1];
+                    for (Socket socket : Server.sockets.values()) {
+                        new DataOutputStream(socket.getOutputStream()).writeUTF(Server.serverport + ":" + info);
+                    }
                 }
                 else if (info.startsWith("/to")) {
-                    int port = Integer.parseInt(info.split(" ")[1]);
-                    if (Server.sockets.keySet().contains(port)) {
-                        Socket socket = Server.sockets.get(port);
-                        dataOutputStream = new DataOutputStream(socket.getOutputStream());
-                        //dataOutputStream.writeUTF(port + ":" + info);
-                        System.out.println("连接到"+port);
+                    if (info.equals("/to")) {
+                        System.out.println(Server.toport);
+                        continue;
                     }
-                    else {
+                    port = Integer.parseInt(info.split(" ")[1]);
+                    if (Server.sockets.keySet().contains(port)) {
+                        Server.toport = port;
+                        System.out.println("连接到" + port);
+                    } else {
                         System.out.println("用户不存在");
                     }
                 }
-                else {
-                    dataOutputStream.writeUTF(port + ":" + info);
+                 else {
+                    Server.send(info);
                 }
                 if (info.equals("/quit")) {
-                    dataOutputStream.writeUTF(port + ":" + info);
                     System.out.println("您已下线");
                     System.exit(0);
                 }
