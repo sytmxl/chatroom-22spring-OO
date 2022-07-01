@@ -10,10 +10,13 @@ public class Client {
             OutputStream outputStream = socket.getOutputStream();
             DataOutputStream dataOutputStream = new DataOutputStream(outputStream);
 
-            new MyServerReader(dataInputStream).start();
-            new MyServerWriter(dataOutputStream).start();
+            String info = dataInputStream.readUTF();
+            int port = Integer.parseInt(info.split(":")[1]);
+
+            new ClientReader(dataInputStream, port).start();
+            new ClientWriter(dataOutputStream, port).start();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("服务端未运行");
         }
     }
 }
