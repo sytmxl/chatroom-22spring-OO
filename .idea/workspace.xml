@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="b75a4ce1-954b-4557-9b79-347133a1ab44" name="Changes" comment="自由通信完成">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Client.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ClientReader.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ClientWriter.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Server.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Server.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ServerReader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ServerReader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ServerThread.java" beforeDir="false" />
+    <list default="true" id="b75a4ce1-954b-4557-9b79-347133a1ab44" name="Changes" comment="UI 结构调整 自动切换">
+      <change beforePath="$PROJECT_DIR$/src/Client.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Client.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,7 +85,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1656398204445</updated>
-      <workItem from="1656398206013" duration="41529000" />
+      <workItem from="1656398206013" duration="41929000" />
     </task>
     <task id="LOCAL-00001" summary="1">
       <created>1656648407348</created>
@@ -107,7 +101,14 @@
       <option name="project" value="LOCAL" />
       <updated>1656663091745</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="UI 结构调整 自动切换">
+      <created>1656765338284</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1656765338284</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -127,7 +128,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="1" />
     <MESSAGE value="自由通信完成" />
-    <option name="LAST_COMMIT_MESSAGE" value="自由通信完成" />
+    <MESSAGE value="UI 结构调整 自动切换" />
+    <option name="LAST_COMMIT_MESSAGE" value="UI 结构调整 自动切换" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
