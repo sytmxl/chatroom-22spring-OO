@@ -18,15 +18,15 @@ public class ServerReader extends Thread {
         String [] infos;
         try{
             while (true) {
-                int to = Server.tos.get(port);
                 info = dataInputStream.readUTF();
+                int to = Server.tos.get(port);
                 if (info.equals("")) {//输入为空
                     continue;
                 }
                 if (info.startsWith("/to")) {
                     infos = info.split(" ");
                     if (infos.length == 1) {
-                        send(String.valueOf(to), 0);
+                        send("当前连接到："+String.valueOf(to), 0);
                     }
                     else {
                         int newto = Integer.valueOf(infos[1]);
@@ -45,13 +45,10 @@ public class ServerReader extends Thread {
                         send(String.valueOf(integer), 0);
                     }
                 }
-                else if (info.startsWith("/quit")) {
-                    System.out.println(port+"已下线");
-                }
                 else if (to != 8888){
                     boolean ret = Server.send(to, info, port);
                     if (!ret) {
-                        send("发送失败", 0);
+                        send("发送失败,对方未在线", 0);
                     }
                 }
                 else {
@@ -59,7 +56,37 @@ public class ServerReader extends Thread {
                 }
             }
         } catch (IOException e) {
-            System.out.println(port+"已下线");
+            for (Socket socket : Server.sockets.values()) {
+                try {
+                    DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+                    dataOutputStream.writeUTF("0:"+port + "已下线");
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+            System.out.println(port + "已下线");
+            Server.sockets.remove(port);
+            Server.tos.remove(port);
+            for (Integer from : Server.tos.keySet()) {
+                if (Server.tos.get(from) == port) {
+                    if (Server.tos.size() == 1) {
+                        Server.tos.put(from, 8888);
+                    }
+                    else {
+                        int to = (int) Server.tos.keySet().toArray()[0];
+                        if (to == from) {
+                            to = (int) Server.tos.keySet().toArray()[1];
+                        }
+                        Server.tos.put(from, to);
+                    }
+                    try {
+                        Server.send(from, "自动连接到"+ Server.tos.get(from), 0);
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                }
+            }
+            relink();
         }
     }
     boolean send(String info) throws IOException {//发送给自己处理的client
@@ -75,11 +102,24 @@ public class ServerReader extends Thread {
     boolean send(String info, int prefix) throws IOException {//发送给自己处理的client
         if (Server.sockets.containsKey(port)) {
             Socket socket = Server.sockets.get(port);
-            new DataOutputStream(socket.getOutputStream()).writeUTF(prefix+":"+info);
+            DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
+            dataOutputStream.writeUTF(prefix+":"+info);
             return true;
         }
         else {
             return false;
+        }
+    }
+
+    void relink() {
+        if (!Server.tos.containsKey(Server.toport)) {
+            if (Server.tos.size() == 0) {
+                Server.toport = 0;
+            }
+            else {
+                Server.toport = (int) Server.tos.keySet().toArray()[0];
+                System.out.println("自动连接到"+ Server.toport);
+            }
         }
     }
 }

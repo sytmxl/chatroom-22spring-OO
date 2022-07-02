@@ -16,10 +16,10 @@ public class Server {
             new ServerWriter().start();
             while (true) {
                 Socket socket = serverSocket.accept();
-                ServerThread serverThread = new ServerThread(socket, serverport, socket.getPort());
 
                 if (toport==0) {
                     toport = socket.getPort();
+                    System.out.println("自动连接到"+ toport);
                 }
 
                 DataOutputStream dataOutputStream = new DataOutputStream(socket.getOutputStream());
@@ -27,7 +27,10 @@ public class Server {
 
                 sockets.put(socket.getPort(), socket);
                 tos.put(socket.getPort(), serverport);
-                serverThread.start();
+
+                InputStream inputStream = socket.getInputStream();
+                DataInputStream dataInputStream = new DataInputStream(inputStream);
+                new ServerReader(dataInputStream, socket.getPort()).start();
             }
         }
         catch (SocketException e) {
